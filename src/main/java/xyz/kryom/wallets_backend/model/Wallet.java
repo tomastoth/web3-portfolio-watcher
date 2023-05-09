@@ -30,8 +30,8 @@ import xyz.kryom.wallets_backend.constants.BlockchainType;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@Setter
 @Table(name="wallets")
 public class Wallet extends BaseEntity implements Serializable {
 

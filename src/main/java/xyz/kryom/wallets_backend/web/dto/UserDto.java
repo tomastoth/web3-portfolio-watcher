@@ -8,40 +8,11 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package xyz.kryom.wallets_backend.web.dto;
 
 /**
  * @author Tomas Toth
  */
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@Table(name="users")
-public class User extends BaseEntity implements Serializable {
-  private String username;
-  private String password;
-
-  @ManyToMany
-  @JoinTable(name = "user_wallets", joinColumns = @JoinColumn(name = "id"),
-      inverseJoinColumns = @JoinColumn(name = "wallet_id"))
-  private Set<Wallet> followedWallets = new HashSet<>();
-
-  public void addFollowedWallets(Wallet wallet){
-    followedWallets.add(wallet);
-  }
+public record UserDto(String username) {
 
 }

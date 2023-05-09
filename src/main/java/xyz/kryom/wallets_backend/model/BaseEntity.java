@@ -45,12 +45,6 @@ public class BaseEntity implements Serializable {
   @Column(name = "update_date", nullable = false)
   private Instant updatedDate;
 
-  public BaseEntity(Long id, Instant createdDate, Instant updatedDate) {
-    this.id = id;
-    this.createdDate = createdDate;
-    this.updatedDate = updatedDate;
-  }
-
 
   @Override
   public boolean equals(Object o) {

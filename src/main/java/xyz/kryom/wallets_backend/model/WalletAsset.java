@@ -30,7 +30,6 @@ import lombok.Setter;
 @Table(name="wallet_assets")
 @NoArgsConstructor
 @Getter
-@Setter
 public class WalletAsset extends BaseEntity implements Serializable {
   @ManyToOne
   @JoinColumn(name="wallet_id")
@@ -61,5 +60,17 @@ public class WalletAsset extends BaseEntity implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), wallet, priceAsset, valueEth);
+  }
+
+  public void setWallet(Wallet wallet) {
+    this.wallet = wallet;
+  }
+
+  public void setPriceAsset(PriceAsset priceAsset) {
+    this.priceAsset = priceAsset;
+  }
+
+  public void setValueEth(BigDecimal valueEth) {
+    this.valueEth = valueEth;
   }
 }
