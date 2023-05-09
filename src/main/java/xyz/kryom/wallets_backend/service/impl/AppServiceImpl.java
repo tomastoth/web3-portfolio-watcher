@@ -36,11 +36,13 @@ public class AppServiceImpl implements AppService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Optional<User> findUserById(long userId) {
     return userRepository.findById(userId);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Optional<User> findUserByUsername(String username) {
     return userRepository.findByUsername(username);
   }
