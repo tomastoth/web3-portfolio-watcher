@@ -44,7 +44,7 @@ public class UserResource {
     this.userMapper = userMapper;
   }
 
-  @GetMapping("/{user_id}")
+  @GetMapping("/{userId}")
   public ResponseEntity<UserDto> findUserById(@PathVariable long userId) {
     Optional<User> optionalUser = appService.findUserById(userId);
     if (optionalUser.isEmpty()) {
