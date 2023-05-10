@@ -15,4 +15,7 @@ package xyz.kryom.wallets_backend.exceptions;
  */
 public class InvalidUserError extends RuntimeException{
 
+  public InvalidUserError(String message) {
+    super(message);
+  }
 }

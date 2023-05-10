@@ -33,22 +33,22 @@ import xyz.kryom.wallets_backend.web.dto.UserSaveDto;
 
 @RestController
 @RequestMapping("/api")
-public class UserResource {
+public class UserController {
 
   private final AppService appService;
   private final UserMapper userMapper;
 
 
-  public UserResource(AppService appService, UserMapper userMapper) {
+  public UserController(AppService appService, UserMapper userMapper) {
     this.appService = appService;
     this.userMapper = userMapper;
   }
 
-  @GetMapping("/{userId}")
+  @GetMapping("/users/{userId}")
   public ResponseEntity<UserDto> findUserById(@PathVariable long userId) {
     Optional<User> optionalUser = appService.findUserById(userId);
     if (optionalUser.isEmpty()) {
-      throw new InvalidUserError();
+      throw new InvalidUserError("Such user does not exist!");
     }
     UserDto userDto = userMapper.toDto(optionalUser.get());
     return new ResponseEntity<>(userDto, HttpStatus.OK);

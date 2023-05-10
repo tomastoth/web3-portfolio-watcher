@@ -38,7 +38,7 @@ import xyz.kryom.wallets_backend.web.dto.UserSaveDto;
 @SpringBootTest
 @WebAppConfiguration
 @ExtendWith(MockitoExtension.class)
-class UserResourceTest {
+class UserControllerTest {
 
 
   private MockMvc mockMvc;
@@ -48,7 +48,7 @@ class UserResourceTest {
 
   @BeforeEach
   void setUp() {
-    mockMvc = MockMvcBuilders.standaloneSetup(new UserResource(appServiceMock, new UserMapperImpl()))
+    mockMvc = MockMvcBuilders.standaloneSetup(new UserController(appServiceMock, new UserMapperImpl()))
                              .build();
   }
 
