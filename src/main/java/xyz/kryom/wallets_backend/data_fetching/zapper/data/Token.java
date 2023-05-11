@@ -8,17 +8,13 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.model;
+package xyz.kryom.wallets_backend.data_fetching.zapper.data;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,40 +22,26 @@ import lombok.Setter;
 /**
  * @author Tomas Toth
  */
-@Entity
-@Table(name="wallet_assets")
-@NoArgsConstructor
-@Getter
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Setter
-public class WalletAsset extends BaseEntity implements Serializable {
-  @ManyToOne
-  @JoinColumn(name="wallet_id")
-  private Wallet wallet;
-  @ManyToOne
-  @JoinColumn(name="price_asset_id")
-  private PriceAsset priceAsset;
-  @NotNull
-  @Column(name="value_eth", nullable = false)
-  private BigDecimal valueEth;
+@Getter
+public class Token {
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    if (!super.equals(o)) {
-      return false;
-    }
-    WalletAsset that = (WalletAsset) o;
-    return Objects.equals(wallet, that.wallet) && Objects.equals(priceAsset, that.priceAsset) && Objects.equals(
-        valueEth, that.valueEth);
-  }
+  @JsonProperty("address")
+  private String address;
+  @JsonProperty("name")
+  private String name;
+  @JsonProperty("symbol")
+  private String symbol;
+  @JsonProperty("price")
+  private BigDecimal price;
+  @JsonProperty("balance")
+  private BigDecimal balance;
+  @JsonProperty("balanceUSD")
+  private BigDecimal balanceUsd;
+  @JsonProperty("coingeckoId")
+  private String coingeckoId;
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode(), wallet, priceAsset, valueEth);
-  }
+
 }

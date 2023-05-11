@@ -12,43 +12,33 @@ package xyz.kryom.wallets_backend.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import xyz.kryom.crypto_common.BlockchainType;
 
 /**
  * @author Tomas Toth
  */
-
 @Entity
-@Getter
+@Table(name="wallet_tokens")
 @NoArgsConstructor
-@Setter
-@Table(name="wallets")
-public class Wallet extends BaseEntity implements Serializable {
-
-  @NotEmpty
-  @Column(name = "address", nullable = false)
-  private String address;
+@Getter
+public class WalletToken extends BaseEntity implements Serializable {
+  @ManyToOne
+  @JoinColumn(name="wallet_id")
+  private Wallet wallet;
+  @ManyToOne
+  @JoinColumn(name="price_token_id")
+  private PriceToken priceToken;
   @NotNull
-  @Column(name = "blockchain_type", nullable = false)
-  private BlockchainType blockchainType;
-  @OneToMany(mappedBy = "wallet")
-  private Set<WalletToken> walletTokens;
-
-  public void addWalletToken(WalletToken walletToken){
-    walletTokens.add(walletToken);
-    walletToken.setWallet(this);
-  }
-
+  @Column(name="value_eth", nullable = false)
+  private BigDecimal valueEth;
 
   @Override
   public boolean equals(Object o) {
@@ -61,12 +51,25 @@ public class Wallet extends BaseEntity implements Serializable {
     if (!super.equals(o)) {
       return false;
     }
-    Wallet wallet = (Wallet) o;
-    return Objects.equals(address, wallet.address) && blockchainType == wallet.blockchainType;
+    WalletToken that = (WalletToken) o;
+    return Objects.equals(wallet, that.wallet) && Objects.equals(priceToken, that.priceToken) && Objects.equals(
+        valueEth, that.valueEth);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), address, blockchainType);
+    return Objects.hash(super.hashCode(), wallet, priceToken, valueEth);
+  }
+
+  public void setWallet(Wallet wallet) {
+    this.wallet = wallet;
+  }
+
+  public void setPriceToken(PriceToken priceToken) {
+    this.priceToken = priceToken;
+  }
+
+  public void setValueEth(BigDecimal valueEth) {
+    this.valueEth = valueEth;
   }
 }

@@ -8,40 +8,42 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.model;
+package xyz.kryom.wallets_backend.service.impl;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.kryom.wallets_backend.model.User;
+import xyz.kryom.wallets_backend.repository.UserRepository;
+import xyz.kryom.wallets_backend.service.AppService;
 
 /**
  * @author Tomas Toth
  */
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@Table(name="users")
-public class User extends BaseEntity implements Serializable {
-  private String username;
-  private String password;
+@Service
+public class AppServiceImpl implements AppService {
 
-  @ManyToMany
-  @JoinTable(name = "user_wallets", joinColumns = @JoinColumn(name = "id"),
-      inverseJoinColumns = @JoinColumn(name = "wallet_id"))
-  private Set<Wallet> followedWallets = new HashSet<>();
+  private final UserRepository userRepository;
 
-  public void addFollowedWallets(Wallet wallet){
-    followedWallets.add(wallet);
+  public AppServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
+  @Override
+  @Transactional
+  public User saveUser(User user) {
+    return userRepository.save(user);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<User> findUserById(long userId) {
+    return userRepository.findById(userId);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<User> findUserByUsername(String username) {
+    return userRepository.findByUsername(username);
+  }
 }

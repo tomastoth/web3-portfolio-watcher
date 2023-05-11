@@ -15,10 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,21 +25,24 @@ import lombok.Setter;
 /**
  * @author Tomas Toth
  */
-
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name="price_assets")
-public class PriceAsset extends BaseEntity implements Serializable {
+@Table(name="tokens")
+public class Token extends BaseEntity implements Serializable {
+  @NotEmpty
+  @Column(name="name", nullable = false)
+  private String name;
+  @NotEmpty
+  @Column(name="symbol", nullable = false)
+  private String symbol;
+  @NotEmpty
+  @Column(name="address",nullable = false)
+  private String address;
   @ManyToOne
-  @JoinColumn(name="asset_id")
-  private Asset asset;
-  @NotNull
-  @Column(name="price", nullable = false)
-  private BigDecimal price;
-
-
+  @JoinColumn(name="blockchain_id")
+  private Blockchain blockchain;
 
   @Override
   public boolean equals(Object o) {
@@ -54,12 +55,13 @@ public class PriceAsset extends BaseEntity implements Serializable {
     if (!super.equals(o)) {
       return false;
     }
-    PriceAsset that = (PriceAsset) o;
-    return Objects.equals(asset, that.asset) && Objects.equals(price, that.price) && Objects.equals(id, that.id);
+    Token token = (Token) o;
+    return Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(address,
+        token.address) && Objects.equals(blockchain, token.blockchain);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), asset, price);
+    return Objects.hash(super.hashCode(), name, symbol, address, blockchain);
   }
 }
