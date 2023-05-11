@@ -15,27 +15,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xyz.kryom.crypto_common.Blockchain;
 import xyz.kryom.crypto_common.BlockchainType;
 import xyz.kryom.crypto_common.price.PriceProvider;
 import xyz.kryom.crypto_common.price.SymbolToken;
 import xyz.kryom.wallets_backend.data_fetching.DataError;
-import xyz.kryom.wallets_backend.data_fetching.HttpUtils;
 import xyz.kryom.wallets_backend.data_fetching.WalletInfoFetcher;
 import xyz.kryom.wallets_backend.data_fetching.zapper.data.Token;
 import xyz.kryom.wallets_backend.data_fetching.zapper.data.TokenUpdate;
-import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
 import xyz.kryom.wallets_backend.web.dto.WalletDto;
+import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
 
 /**
  * @author Tomas Toth
@@ -44,26 +44,16 @@ import xyz.kryom.wallets_backend.web.dto.WalletDto;
 @Log4j2
 public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
 
-  public static final String TOKENS_API = "https://api.zapper.xyz/v2/balances/tokens";
-  private static final Blockchain BLOCKCHAIN = Blockchain.ETHEREUM;
-  private static final String AUTH_HEADER_NAME = "Authorization";
+  static final Blockchain BLOCKCHAIN = Blockchain.ETHEREUM;
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   public static final BlockchainType BLOCKCHAIN_TYPE = BlockchainType.EVM;
 
-  @Value("${zapper_api_key}")
-  private String zapperApiKey;
   private final PriceProvider priceProvider;
+  private final WalletDataRequester walletDataRequester;
 
-  public ZapperWalletInfoFetcher(PriceProvider priceProvider) {
+  public ZapperWalletInfoFetcher(PriceProvider priceProvider, WalletDataRequester walletDataRequester) {
     this.priceProvider = priceProvider;
-  }
-
-  private static String buildUrl(String urlStart, Map<String, Collection<String>> queryParams) {
-    StringBuilder urlBuilder = new StringBuilder();
-    urlBuilder.append(String.format("%s?", urlStart));
-    queryParams.forEach((paramName, paramValues) -> paramValues.forEach(
-        paramValue -> urlBuilder.append(String.format("%s%%5B%%5D=%s&", paramName, paramValue))));
-    return urlBuilder.toString();
+    this.walletDataRequester = walletDataRequester;
   }
 
   /**
@@ -73,21 +63,7 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
    */
   @Override
   public Map<WalletDto, Collection<WalletTokenDto>> fetchWalletTokens(Collection<WalletDto> walletsDto) {
-    HashMap<String, Collection<String>> queryParams = new HashMap<>();
-    queryParams.put("addresses", walletsDto.stream()
-        .map(WalletDto::walletAddress)
-        .toList());
-    queryParams.put("networks", Set.of(mapBlockchainToZapperBlockchain(BLOCKCHAIN)));
-    String url = buildUrl(TOKENS_API, queryParams);
-    return HttpUtils.fetchUrl(url, Map.of(AUTH_HEADER_NAME, createAuthHeader()))
-        .thenApply(this::parseZapperBalanceUpdate)
-        .join();
-  }
-
-  private String mapBlockchainToZapperBlockchain(Blockchain blockchain) {
-    return switch (blockchain) {
-      case ETHEREUM -> "ethereum";
-    };
+    return walletDataRequester.requestWalletsTokens(walletsDto).thenApply(this::parseZapperBalanceUpdate).join();
   }
 
   private Map<WalletDto, Collection<WalletTokenDto>> parseZapperBalanceUpdate(String update) {
@@ -120,7 +96,7 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
   private WalletTokensWrapper extractSingleWalletTokens(Entry<String, JsonNode> singleWalletUpdate)
       throws JsonProcessingException {
 
-    Set<WalletTokenDto> walletTokens = new HashSet<>();
+    List<WalletTokenDto> walletTokens = new ArrayList<>();
     JsonNode walletTokenBalances = singleWalletUpdate.getValue();
     WalletDto walletDto = new WalletDto(singleWalletUpdate.getKey(), BLOCKCHAIN_TYPE);
     for (JsonNode singleTokenBalance : walletTokenBalances) {
@@ -135,19 +111,12 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
     BigDecimal tokenPrice = token.getBalanceUsd()
         .divide(token.getBalance(), MathContext.DECIMAL128);
     BigDecimal valueEth = priceProvider.getPriceBySymbol(new SymbolToken("WETH", BLOCKCHAIN));
-    return new WalletTokenDto(wallet, token.getAddress(), token.getBalance(), tokenPrice, token.getBalanceUsd(),
+    return new WalletTokenDto(wallet, token.getAddress(), token.getSymbol(), token.getBalance(), tokenPrice,
+        token.getBalanceUsd(),
         valueEth);
   }
 
-  private String createAuthHeader() {
-    return String.format("Basic %s", zapperApiKey);
-  }
-
-  public void setZapperApiKey(String zapperApiKey) {
-    this.zapperApiKey = zapperApiKey;
-  }
-
-  private record WalletTokensWrapper(WalletDto wallet, Set<WalletTokenDto> tokens) {
+  private record WalletTokensWrapper(WalletDto wallet, List<WalletTokenDto> tokens) {
 
   }
 }
