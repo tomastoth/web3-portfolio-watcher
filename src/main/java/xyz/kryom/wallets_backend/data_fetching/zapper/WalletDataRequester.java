@@ -8,17 +8,15 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.web.dto;
+package xyz.kryom.wallets_backend.data_fetching.zapper;
 
-import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
 
 /**
  * @author Tomas Toth
  */
-public record WalletTokenDto(WalletDto walletDto, String tokenAddress, String tokenSymbol, BigDecimal tokenAmount,
-
-                             BigDecimal tokenPriceUsd,
-
-                             BigDecimal tokenValueUsd, BigDecimal tokenValueEth) {
-
+public interface WalletDataRequester {
+  CompletableFuture<String> requestWalletsTokens(Collection<WalletDto> wallets);
 }
