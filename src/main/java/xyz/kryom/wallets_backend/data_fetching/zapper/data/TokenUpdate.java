@@ -8,16 +8,25 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.web.dto;
+package xyz.kryom.wallets_backend.data_fetching.zapper.data;
 
-import xyz.kryom.crypto_common.BlockchainType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Tomas Toth
  */
-public record WalletDto(
-    String walletAddress,
-    BlockchainType blockchainType
-) {
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Setter
+@Getter
+public class TokenUpdate {
+  @JsonProperty("network")
+  private String network;
+  @JsonProperty("token")
+  private Token token;
 }

@@ -8,16 +8,40 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend;
+package xyz.kryom.wallets_backend.data_fetching.zapper.data;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@SpringBootTest
-class WalletsBackendApplicationTests {
+/**
+ * @author Tomas Toth
+ */
 
-  @Test
-  void contextLoads() {
-  }
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Setter
+@Getter
+public class Token {
+
+  @JsonProperty("address")
+  private String address;
+  @JsonProperty("name")
+  private String name;
+  @JsonProperty("symbol")
+  private String symbol;
+  @JsonProperty("price")
+  private BigDecimal price;
+  @JsonProperty("balance")
+  private BigDecimal balance;
+  @JsonProperty("balanceUSD")
+  private BigDecimal balanceUsd;
+  @JsonProperty("coingeckoId")
+  private String coingeckoId;
+
 
 }

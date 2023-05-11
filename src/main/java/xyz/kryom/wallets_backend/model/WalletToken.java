@@ -18,30 +18,27 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * @author Tomas Toth
  */
-
 @Entity
+@Table(name="wallet_tokens")
 @NoArgsConstructor
 @Getter
-@Setter
-@Table(name="price_assets")
-public class PriceAsset extends BaseEntity implements Serializable {
+public class WalletToken extends BaseEntity implements Serializable {
   @ManyToOne
-  @JoinColumn(name="asset_id")
-  private Asset asset;
+  @JoinColumn(name="wallet_id")
+  private Wallet wallet;
+  @ManyToOne
+  @JoinColumn(name="price_token_id")
+  private PriceToken priceToken;
   @NotNull
-  @Column(name="price", nullable = false)
-  private BigDecimal price;
-
-
+  @Column(name="value_eth", nullable = false)
+  private BigDecimal valueEth;
 
   @Override
   public boolean equals(Object o) {
@@ -54,12 +51,25 @@ public class PriceAsset extends BaseEntity implements Serializable {
     if (!super.equals(o)) {
       return false;
     }
-    PriceAsset that = (PriceAsset) o;
-    return Objects.equals(asset, that.asset) && Objects.equals(price, that.price) && Objects.equals(id, that.id);
+    WalletToken that = (WalletToken) o;
+    return Objects.equals(wallet, that.wallet) && Objects.equals(priceToken, that.priceToken) && Objects.equals(
+        valueEth, that.valueEth);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), asset, price);
+    return Objects.hash(super.hashCode(), wallet, priceToken, valueEth);
+  }
+
+  public void setWallet(Wallet wallet) {
+    this.wallet = wallet;
+  }
+
+  public void setPriceToken(PriceToken priceToken) {
+    this.priceToken = priceToken;
+  }
+
+  public void setValueEth(BigDecimal valueEth) {
+    this.valueEth = valueEth;
   }
 }

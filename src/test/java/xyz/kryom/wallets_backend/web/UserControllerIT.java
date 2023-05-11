@@ -38,7 +38,7 @@ import xyz.kryom.wallets_backend.web.dto.UserSaveDto;
 @SpringBootTest
 @WebAppConfiguration
 @ExtendWith(MockitoExtension.class)
-class UserControllerTest {
+class UserControllerIT {
 
 
   private MockMvc mockMvc;

@@ -8,16 +8,16 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.web.dto;
+package xyz.kryom.wallets_backend.data_fetching;
 
-import xyz.kryom.crypto_common.BlockchainType;
+import java.util.Collection;
+import java.util.Map;
+import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
 
 /**
  * @author Tomas Toth
  */
-public record WalletDto(
-    String walletAddress,
-    BlockchainType blockchainType
-) {
-
+public interface WalletInfoFetcher {
+  Map<WalletDto,Collection<WalletTokenDto>> fetchWalletTokens(Collection<WalletDto> walletDto);
 }

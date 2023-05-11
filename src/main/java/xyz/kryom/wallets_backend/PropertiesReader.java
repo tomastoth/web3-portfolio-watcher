@@ -8,11 +8,28 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.constants;
+package xyz.kryom.wallets_backend;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * @author Tomas Toth
  */
-public enum BlockchainType {
-  EVM
+public class PropertiesReader {
+  private static final String PROPERTIES_FILE = "application.yaml";
+  private static final Properties PROPERTIES = new Properties();
+
+  static {
+    try (InputStream is = PropertiesReader.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
+      PROPERTIES.load(is);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static String getProperty(String key) {
+    return PROPERTIES.getProperty(key);
+  }
 }

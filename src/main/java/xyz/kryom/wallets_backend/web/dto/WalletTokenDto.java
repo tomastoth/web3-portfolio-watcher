@@ -10,14 +10,14 @@
 
 package xyz.kryom.wallets_backend.web.dto;
 
-import xyz.kryom.crypto_common.BlockchainType;
+import java.math.BigDecimal;
 
 /**
  * @author Tomas Toth
  */
-public record WalletDto(
-    String walletAddress,
-    BlockchainType blockchainType
-) {
+public record WalletTokenDto(WalletDto walletDto, String tokenAddress, BigDecimal tokenAmount,
+                             BigDecimal tokenPriceUsd,
+
+                             BigDecimal tokenValueUsd, BigDecimal tokenValueEth) {
 
 }

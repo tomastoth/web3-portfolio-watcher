@@ -22,7 +22,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import xyz.kryom.wallets_backend.constants.BlockchainType;
+import xyz.kryom.crypto_common.BlockchainType;
 
 /**
  * @author Tomas Toth
@@ -42,11 +42,11 @@ public class Wallet extends BaseEntity implements Serializable {
   @Column(name = "blockchain_type", nullable = false)
   private BlockchainType blockchainType;
   @OneToMany(mappedBy = "wallet")
-  private Set<WalletAsset> walletAssets;
+  private Set<WalletToken> walletTokens;
 
-  public void addWalletAsset(WalletAsset walletAsset){
-    walletAssets.add(walletAsset);
-    walletAsset.setWallet(this);
+  public void addWalletToken(WalletToken walletToken){
+    walletTokens.add(walletToken);
+    walletToken.setWallet(this);
   }
 
 

@@ -15,9 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,19 +26,23 @@ import lombok.Setter;
  * @author Tomas Toth
  */
 @Entity
-@Table(name="wallet_assets")
 @NoArgsConstructor
 @Getter
-public class WalletAsset extends BaseEntity implements Serializable {
+@Setter
+@Table(name="tokens")
+public class Token extends BaseEntity implements Serializable {
+  @NotEmpty
+  @Column(name="name", nullable = false)
+  private String name;
+  @NotEmpty
+  @Column(name="symbol", nullable = false)
+  private String symbol;
+  @NotEmpty
+  @Column(name="address",nullable = false)
+  private String address;
   @ManyToOne
-  @JoinColumn(name="wallet_id")
-  private Wallet wallet;
-  @ManyToOne
-  @JoinColumn(name="price_asset_id")
-  private PriceAsset priceAsset;
-  @NotNull
-  @Column(name="value_eth", nullable = false)
-  private BigDecimal valueEth;
+  @JoinColumn(name="blockchain_id")
+  private Blockchain blockchain;
 
   @Override
   public boolean equals(Object o) {
@@ -52,25 +55,13 @@ public class WalletAsset extends BaseEntity implements Serializable {
     if (!super.equals(o)) {
       return false;
     }
-    WalletAsset that = (WalletAsset) o;
-    return Objects.equals(wallet, that.wallet) && Objects.equals(priceAsset, that.priceAsset) && Objects.equals(
-        valueEth, that.valueEth);
+    Token token = (Token) o;
+    return Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(address,
+        token.address) && Objects.equals(blockchain, token.blockchain);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), wallet, priceAsset, valueEth);
-  }
-
-  public void setWallet(Wallet wallet) {
-    this.wallet = wallet;
-  }
-
-  public void setPriceAsset(PriceAsset priceAsset) {
-    this.priceAsset = priceAsset;
-  }
-
-  public void setValueEth(BigDecimal valueEth) {
-    this.valueEth = valueEth;
+    return Objects.hash(super.hashCode(), name, symbol, address, blockchain);
   }
 }
