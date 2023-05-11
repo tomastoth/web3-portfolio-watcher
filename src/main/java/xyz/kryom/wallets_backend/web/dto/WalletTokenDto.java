@@ -16,6 +16,7 @@ import java.math.BigDecimal;
  * @author Tomas Toth
  */
 public record WalletTokenDto(WalletDto walletDto, String tokenAddress, String tokenSymbol, BigDecimal tokenAmount,
+
                              BigDecimal tokenPriceUsd,
 
                              BigDecimal tokenValueUsd, BigDecimal tokenValueEth) {

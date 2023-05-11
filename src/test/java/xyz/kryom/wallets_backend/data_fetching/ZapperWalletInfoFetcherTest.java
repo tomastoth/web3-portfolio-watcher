@@ -9,7 +9,6 @@
  */
 
 package xyz.kryom.wallets_backend.data_fetching;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,7 +29,6 @@ import xyz.kryom.wallets_backend.data_fetching.zapper.WalletDataRequester;
 import xyz.kryom.wallets_backend.data_fetching.zapper.ZapperWalletInfoFetcher;
 import xyz.kryom.wallets_backend.web.dto.WalletDto;
 import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +42,6 @@ class ZapperWalletInfoFetcherTest {
 
   private ZapperWalletInfoFetcher zapperWalletInfoFetcher;
   private NaivePriceProvider naivePriceProvider;
-
   @Mock
   private WalletDataRequester walletDataRequesterMock;
 

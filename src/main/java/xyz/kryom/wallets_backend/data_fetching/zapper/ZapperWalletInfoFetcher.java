@@ -95,7 +95,6 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
 
   private WalletTokensWrapper extractSingleWalletTokens(Entry<String, JsonNode> singleWalletUpdate)
       throws JsonProcessingException {
-
     List<WalletTokenDto> walletTokens = new ArrayList<>();
     JsonNode walletTokenBalances = singleWalletUpdate.getValue();
     WalletDto walletDto = new WalletDto(singleWalletUpdate.getKey(), BLOCKCHAIN_TYPE);
@@ -117,6 +116,5 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
   }
 
   private record WalletTokensWrapper(WalletDto wallet, List<WalletTokenDto> tokens) {
-
   }
 }
