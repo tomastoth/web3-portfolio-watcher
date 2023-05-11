@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class Wallet extends BaseEntity implements Serializable {
   @Column(name = "blockchain_type", nullable = false)
   private BlockchainType blockchainType;
   @OneToMany(mappedBy = "wallet")
-  private Set<WalletToken> walletTokens;
+  private Set<WalletToken> walletTokens = new HashSet<>();
 
   public void addWalletToken(WalletToken walletToken){
     walletTokens.add(walletToken);

@@ -40,10 +40,10 @@ public class BaseEntity implements Serializable {
 
   @NotNull
   @Column(name = "created_date", nullable = false)
-  private Instant createdDate;
+  private Instant createdDate = Instant.now();
   @NotNull
   @Column(name = "update_date", nullable = false)
-  private Instant updatedDate;
+  private Instant updatedDate = Instant.now();
 
 
   @Override
