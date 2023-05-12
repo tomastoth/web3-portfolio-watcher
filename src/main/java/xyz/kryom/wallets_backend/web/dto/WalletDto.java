@@ -16,7 +16,7 @@ import xyz.kryom.crypto_common.BlockchainType;
  * @author Tomas Toth
  */
 public record WalletDto(
-    String walletAddress,
+    String address,
     BlockchainType blockchainType
 ) {
 

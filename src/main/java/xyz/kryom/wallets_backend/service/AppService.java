@@ -14,8 +14,15 @@ package xyz.kryom.wallets_backend.service;
  * @author Tomas Toth
  */
 
+import java.util.List;
 import java.util.Optional;
+import xyz.kryom.crypto_common.Blockchain;
+import xyz.kryom.crypto_common.BlockchainType;
+import xyz.kryom.wallets_backend.model.PriceToken;
+import xyz.kryom.wallets_backend.model.Token;
 import xyz.kryom.wallets_backend.model.User;
+import xyz.kryom.wallets_backend.model.Wallet;
+import xyz.kryom.wallets_backend.model.WalletToken;
 
 /**
  * Facade to work with data from the application
@@ -26,4 +33,18 @@ public interface AppService {
   Optional<User> findUserById(long userId);
 
   Optional<User> findUserByUsername(String username);
+
+  Wallet saveWallet(Wallet wallet);
+
+  Optional<Wallet> findWalletByAddressAndBlockchainType(String address, BlockchainType blockchainType);
+  List<Wallet> findAllWallets();
+  WalletToken saveWalletToken(WalletToken walletToken);
+
+  Optional<Token> findTokenByAddressAndBlockchain(String address, Blockchain blockchain);
+  Token saveToken(Token token);
+
+  Optional<xyz.kryom.wallets_backend.model.Blockchain> findBlockchainByName(String name);
+
+  xyz.kryom.wallets_backend.model.Blockchain saveBlockchain(xyz.kryom.wallets_backend.model.Blockchain blockchain);
+  PriceToken savePriceToken(PriceToken priceToken);
 }

@@ -31,16 +31,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name="price_tokens")
+@Table(name = "price_tokens")
 public class PriceToken extends BaseEntity implements Serializable {
   @ManyToOne
-  @JoinColumn(name="token_id")
+  @JoinColumn(name = "token_id")
   private Token token;
   @NotNull
-  @Column(name="price", nullable = false)
-  private BigDecimal price;
-
-
+  @Column(name = "price", nullable = false)
+  private BigDecimal priceUsd;
+  private BigDecimal priceEth;
 
   @Override
   public boolean equals(Object o) {
@@ -54,11 +53,11 @@ public class PriceToken extends BaseEntity implements Serializable {
       return false;
     }
     PriceToken that = (PriceToken) o;
-    return Objects.equals(token, that.token) && Objects.equals(price, that.price) && Objects.equals(id, that.id);
+    return Objects.equals(token, that.token) && Objects.equals(getCreatedDate(), that.getCreatedDate());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), token, price);
+    return Objects.hash(super.hashCode(), token, getCreatedDate());
   }
 }

@@ -8,16 +8,19 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.web.dto;
+package xyz.kryom.wallets_backend.mapper;
 
-import java.math.BigDecimal;
+import java.util.List;
+import org.mapstruct.Mapper;
+import xyz.kryom.wallets_backend.model.Wallet;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
 
 /**
  * @author Tomas Toth
  */
-public record WalletTokenDto(WalletDto walletDto, String tokenAddress, String tokenSymbol,
-                             String tokenName, BigDecimal tokenAmount,
-                             BigDecimal tokenPriceUsd,
-                             BigDecimal tokenValueUsd, BigDecimal tokenValueEth) {
 
+@Mapper
+public interface WalletMapper {
+  List<Wallet> fromDtos(List<WalletDto> walletDtos);
+  List<WalletDto> toDtos(List<Wallet> wallets);
 }
