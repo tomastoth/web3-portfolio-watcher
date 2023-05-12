@@ -110,7 +110,8 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
     BigDecimal tokenPrice = token.getBalanceUsd()
         .divide(token.getBalance(), MathContext.DECIMAL128);
     BigDecimal valueEth = priceProvider.getPriceBySymbol(new SymbolToken("WETH", BLOCKCHAIN));
-    return new WalletTokenDto(wallet, token.getAddress(), token.getSymbol(), token.getBalance(), tokenPrice,
+    return new WalletTokenDto(wallet, token.getAddress(), token.getSymbol(),token.getName(), token.getBalance(),
+        tokenPrice,
         token.getBalanceUsd(),
         valueEth);
   }

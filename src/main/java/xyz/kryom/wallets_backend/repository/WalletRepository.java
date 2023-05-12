@@ -8,18 +8,20 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package xyz.kryom.wallets_backend.web.dto;
+package xyz.kryom.wallets_backend.repository;
 
-import java.math.BigDecimal;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import xyz.kryom.crypto_common.BlockchainType;
+import xyz.kryom.wallets_backend.model.Wallet;
 
 /**
  * @author Tomas Toth
  */
-public record WalletTokenDto(WalletDto walletDto, String tokenAddress, String tokenSymbol,
-                             String tokenName, BigDecimal tokenAmount,
-
-                             BigDecimal tokenPriceUsd,
-
-                             BigDecimal tokenValueUsd, BigDecimal tokenValueEth) {
-
+@Repository
+public interface WalletRepository extends JpaRepository<Wallet, Long> {
+  @Query("SELECT w FROM Wallet  w WHERE w.address = :address AND w.blockchainType = :blockchainType")
+  Optional<Wallet> findByAddressAndBlockchainType(String address, BlockchainType blockchainType);
 }

@@ -33,7 +33,7 @@ import xyz.kryom.crypto_common.BlockchainType;
 @Getter
 @NoArgsConstructor
 @Setter
-@Table(name="wallets")
+@Table(name = "wallets")
 public class Wallet extends BaseEntity implements Serializable {
 
   @NotEmpty
@@ -45,11 +45,11 @@ public class Wallet extends BaseEntity implements Serializable {
   @OneToMany(mappedBy = "wallet")
   private Set<WalletToken> walletTokens = new HashSet<>();
 
-  public void addWalletToken(WalletToken walletToken){
+  public void addWalletToken(WalletToken walletToken) {
     walletTokens.add(walletToken);
     walletToken.setWallet(this);
-  }
 
+  }
 
   @Override
   public boolean equals(Object o) {

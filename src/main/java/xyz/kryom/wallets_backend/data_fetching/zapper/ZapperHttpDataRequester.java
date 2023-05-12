@@ -36,7 +36,7 @@ public class ZapperHttpDataRequester implements WalletDataRequester{
   public CompletableFuture<String> requestWalletsTokens(Collection<WalletDto> wallets) {
     HashMap<String, Collection<String>> queryParams = new HashMap<>();
     queryParams.put("addresses", wallets.stream()
-        .map(WalletDto::walletAddress)
+        .map(WalletDto::address)
         .toList());
     queryParams.put("networks", Set.of(mapBlockchainToZapperBlockchain(BLOCKCHAIN)));
     String url = buildUrl(TOKENS_API, queryParams);
