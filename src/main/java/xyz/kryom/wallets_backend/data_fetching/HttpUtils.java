@@ -25,6 +25,7 @@ public class HttpUtils {
 
   private static final HttpClient client = HttpClient.newHttpClient();
 
+  private HttpUtils() {}
   public static CompletableFuture<String> fetchUrl(String url, Map<String, String> headers) {
     HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder(URI.create(url));
     headers.forEach(httpRequestBuilder::header);

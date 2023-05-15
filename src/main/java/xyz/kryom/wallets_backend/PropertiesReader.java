@@ -28,6 +28,7 @@ public class PropertiesReader {
       e.printStackTrace();
     }
   }
+  private PropertiesReader() {}
 
   public static String getProperty(String key) {
     return PROPERTIES.getProperty(key);
