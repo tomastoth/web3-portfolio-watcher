@@ -48,7 +48,6 @@ public class Wallet extends BaseEntity implements Serializable {
   public void addWalletToken(WalletToken walletToken) {
     walletTokens.add(walletToken);
     walletToken.setWallet(this);
-
   }
 
   @Override

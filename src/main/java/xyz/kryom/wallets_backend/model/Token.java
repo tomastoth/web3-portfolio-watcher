@@ -29,19 +29,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name="tokens")
+@Table(name = "tokens")
 public class Token extends BaseEntity implements Serializable {
   @NotEmpty
-  @Column(name="name", nullable = false)
+  @Column(name = "name", nullable = false)
   private String name;
   @NotEmpty
-  @Column(name="symbol", nullable = false)
+  @Column(name = "symbol", nullable = false)
   private String symbol;
   @NotEmpty
-  @Column(name="address",nullable = false)
+  @Column(name = "address", nullable = false)
   private String address;
   @ManyToOne
-  @JoinColumn(name="blockchain_id")
+  @JoinColumn(name = "blockchain_id")
   private Blockchain blockchain;
 
   @Override
@@ -56,7 +56,8 @@ public class Token extends BaseEntity implements Serializable {
       return false;
     }
     Token token = (Token) o;
-    return Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(address,
+    return Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(
+        address,
         token.address) && Objects.equals(blockchain, token.blockchain);
   }
 

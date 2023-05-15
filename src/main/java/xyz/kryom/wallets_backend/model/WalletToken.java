@@ -12,6 +12,7 @@ package xyz.kryom.wallets_backend.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -30,15 +31,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class WalletToken extends BaseEntity implements Serializable {
-  @ManyToOne
+  @ManyToOne()
   @JoinColumn(name="wallet_id")
   private Wallet wallet;
   @ManyToOne
   @JoinColumn(name="price_token_id")
   private PriceToken priceToken;
   @NotNull
-  @Column(name="value_eth", nullable = false)
-  private BigDecimal valueEth;
+  @Column(name="balance",nullable = false)
+  private BigDecimal amount;
 
   @Override
   public boolean equals(Object o) {
@@ -52,13 +53,13 @@ public class WalletToken extends BaseEntity implements Serializable {
       return false;
     }
     WalletToken that = (WalletToken) o;
-    return Objects.equals(wallet, that.wallet) && Objects.equals(priceToken, that.priceToken) && Objects.equals(
-        valueEth, that.valueEth);
+    return Objects.equals(wallet, that.wallet) && Objects.equals(priceToken, that.priceToken) &&
+        Objects.equals(amount, that.amount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), wallet, priceToken, valueEth);
+    return Objects.hash(super.hashCode(), wallet, priceToken, amount);
   }
 
   public void setWallet(Wallet wallet) {
@@ -69,7 +70,7 @@ public class WalletToken extends BaseEntity implements Serializable {
     this.priceToken = priceToken;
   }
 
-  public void setValueEth(BigDecimal valueEth) {
-    this.valueEth = valueEth;
+  public void setAmount(BigDecimal amount) {
+    this.amount = amount;
   }
 }
