@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -23,7 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @ConditionalOnProperty(name = "wallets_backend.security.enable", havingValue = "true")
 public class BasicAuthenticationConfig {
 
@@ -36,7 +36,7 @@ public class BasicAuthenticationConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests((auths) -> auths.anyRequest()
-                                               .authenticated())
+            .authenticated())
         .httpBasic()
         .and()
         .csrf()
