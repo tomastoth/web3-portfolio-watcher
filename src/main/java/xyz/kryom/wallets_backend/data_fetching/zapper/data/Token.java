@@ -13,10 +13,7 @@ package xyz.kryom.wallets_backend.data_fetching.zapper.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -42,6 +39,4 @@ public class Token {
   private BigDecimal balanceUsd;
   @JsonProperty("coingeckoId")
   private String coingeckoId;
-
-
 }

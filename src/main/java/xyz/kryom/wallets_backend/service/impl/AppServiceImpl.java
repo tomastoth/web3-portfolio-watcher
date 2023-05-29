@@ -28,6 +28,8 @@ import xyz.kryom.wallets_backend.repository.UserRepository;
 import xyz.kryom.wallets_backend.repository.WalletRepository;
 import xyz.kryom.wallets_backend.repository.WalletTokenRepository;
 import xyz.kryom.wallets_backend.service.AppService;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
+import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
 
 /**
  * @author Tomas Toth
@@ -127,5 +129,54 @@ public class AppServiceImpl implements AppService {
   public PriceToken savePriceToken(PriceToken priceToken) {
     priceTokenRepository.save(priceToken);
     return priceToken;
+  }
+
+  @Override
+  @Transactional
+  public Token fetchOrCreateToken(
+      Blockchain blockchainEnum,
+      WalletTokenDto walletTokenDto,
+      xyz.kryom.wallets_backend.model.Blockchain blockchain) {
+    Optional<Token> tokenOpt =
+        findTokenByAddressAndBlockchain(walletTokenDto.tokenAddress(), blockchainEnum);
+    if (tokenOpt.isPresent()) {
+      return tokenOpt.get();
+    }
+    Token token = new Token();
+    token.setAddress(walletTokenDto.tokenAddress());
+    token.setSymbol(walletTokenDto.tokenSymbol());
+    token.setBlockchain(blockchain);
+    token.setName(walletTokenDto.tokenName());
+    saveToken(token);
+    return token;
+  }
+
+  @Override
+  @Transactional
+  public xyz.kryom.wallets_backend.model.Blockchain fetchOrCreateBlockchain(
+      Blockchain blockchainEnum,
+      Optional<xyz.kryom.wallets_backend.model.Blockchain> blockchainOpt) {
+    if (blockchainOpt.isPresent()) {
+      return blockchainOpt.get();
+    }
+    xyz.kryom.wallets_backend.model.Blockchain blockchain = new xyz.kryom.wallets_backend.model.Blockchain();
+    blockchain.setName(blockchainEnum.name());
+    saveBlockchain(blockchain);
+    return blockchain;
+  }
+
+  @Override
+  @Transactional
+  public Wallet fetchOrCreateWallet(WalletDto walletDto) {
+    Optional<Wallet> walletOpt =
+        findWalletByAddressAndBlockchainType(walletDto.address(), BlockchainType.EVM);
+    if (walletOpt.isPresent()) {
+      return walletOpt.get();
+    }
+    Wallet wallet = new Wallet();
+    wallet.setAddress(walletDto.address());
+    wallet.setBlockchainType(BlockchainType.EVM);
+    saveWallet(wallet);
+    return wallet;
   }
 }

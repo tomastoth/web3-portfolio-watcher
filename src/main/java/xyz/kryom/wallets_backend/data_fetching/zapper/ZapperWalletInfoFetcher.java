@@ -18,18 +18,15 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import xyz.kryom.crypto_common.Blockchain;
 import xyz.kryom.crypto_common.BlockchainType;
 import xyz.kryom.crypto_common.price.PriceProvider;
-import xyz.kryom.crypto_common.price.SymbolToken;
 import xyz.kryom.wallets_backend.data_fetching.DataError;
 import xyz.kryom.wallets_backend.data_fetching.WalletInfoFetcher;
 import xyz.kryom.wallets_backend.data_fetching.zapper.data.Token;
@@ -109,9 +106,9 @@ public class ZapperWalletInfoFetcher implements WalletInfoFetcher {
     Token token = singleTokenUpdate.getToken();
     BigDecimal tokenPrice = token.getBalanceUsd()
         .divide(token.getBalance(), MathContext.DECIMAL128);
-    BigDecimal priceEth = priceProvider.getPriceBySymbol(new SymbolToken("WETH", BLOCKCHAIN));
+    BigDecimal priceEth = priceProvider.getPriceBySymbol("ETH");
     BigDecimal valueEth = priceEth.divide(token.getBalanceUsd(), MathContext.DECIMAL128);
-    return new WalletTokenDto(wallet, token.getAddress(), token.getSymbol(),token.getName(), token.getBalance(),
+    return new WalletTokenDto(wallet, token.getAddress(), token.getSymbol(), token.getName(), token.getBalance(),
         tokenPrice,
         token.getBalanceUsd(),
         valueEth);

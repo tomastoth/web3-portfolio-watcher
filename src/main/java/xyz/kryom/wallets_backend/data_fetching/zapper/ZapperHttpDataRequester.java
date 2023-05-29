@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.kryom.crypto_common.Blockchain;
-import xyz.kryom.wallets_backend.data_fetching.HttpUtils;
+import xyz.kryom.crypto_common.HttpUtils;
 import xyz.kryom.wallets_backend.web.dto.WalletDto;
 
 import static xyz.kryom.wallets_backend.data_fetching.zapper.ZapperWalletInfoFetcher.BLOCKCHAIN;
@@ -40,7 +40,7 @@ public class ZapperHttpDataRequester implements WalletDataRequester{
         .toList());
     queryParams.put("networks", Set.of(mapBlockchainToZapperBlockchain(BLOCKCHAIN)));
     String url = buildUrl(TOKENS_API, queryParams);
-    return HttpUtils.fetchUrl(url, Map.of(AUTH_HEADER_NAME, createAuthHeader()));
+    return HttpUtils.fetchUrlAsync(url, Map.of(AUTH_HEADER_NAME, createAuthHeader()));
   }
 
   private String mapBlockchainToZapperBlockchain(Blockchain blockchain) {

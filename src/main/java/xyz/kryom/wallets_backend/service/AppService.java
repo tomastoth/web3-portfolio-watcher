@@ -23,6 +23,8 @@ import xyz.kryom.wallets_backend.model.Token;
 import xyz.kryom.wallets_backend.model.User;
 import xyz.kryom.wallets_backend.model.Wallet;
 import xyz.kryom.wallets_backend.model.WalletToken;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
+import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
 
 /**
  * Facade to work with data from the application
@@ -47,4 +49,12 @@ public interface AppService {
 
   xyz.kryom.wallets_backend.model.Blockchain saveBlockchain(xyz.kryom.wallets_backend.model.Blockchain blockchain);
   PriceToken savePriceToken(PriceToken priceToken);
+  xyz.kryom.wallets_backend.model.Blockchain fetchOrCreateBlockchain(
+      Blockchain blockchainEnum,
+      Optional<xyz.kryom.wallets_backend.model.Blockchain> blockchainOpt);
+  Wallet fetchOrCreateWallet(WalletDto walletDto);
+  Token fetchOrCreateToken(
+      Blockchain blockchainEnum,
+      WalletTokenDto walletTokenDto,
+      xyz.kryom.wallets_backend.model.Blockchain blockchain);
 }

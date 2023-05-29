@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.kryom.crypto_common.BlockchainType;
+import xyz.kryom.crypto_common.price.PriceProvider;
 import xyz.kryom.wallets_backend.TestUtils;
 import xyz.kryom.wallets_backend.data_fetching.zapper.WalletDataRequester;
 import xyz.kryom.wallets_backend.data_fetching.zapper.ZapperWalletInfoFetcher;
@@ -41,18 +42,19 @@ import static org.mockito.Mockito.when;
 class ZapperWalletInfoFetcherTest {
 
   private ZapperWalletInfoFetcher zapperWalletInfoFetcher;
-  private NaivePriceProvider naivePriceProvider;
+  @Mock
+  private PriceProvider priceProviderMock;
   @Mock
   private WalletDataRequester walletDataRequesterMock;
 
   @BeforeEach
   void setUp() {
-    naivePriceProvider = new NaivePriceProvider();
-    zapperWalletInfoFetcher = new ZapperWalletInfoFetcher(naivePriceProvider, walletDataRequesterMock);
+    zapperWalletInfoFetcher = new ZapperWalletInfoFetcher(priceProviderMock, walletDataRequesterMock);
   }
 
   @Test
   void whenGivenDataFromZapper_ThenWeShouldParseItCorrectly() throws URISyntaxException, IOException {
+    when(priceProviderMock.getPriceBySymbol("ETH")).thenReturn(BigDecimal.valueOf(2000.0));
     String loadedData = TestUtils.loadTestData("ZapperWalletData");
     WalletDto wallet = new WalletDto("0x5c9e30def85334e587cf36eb07bdd6a72bf1452d", BlockchainType.EVM);
     when(walletDataRequesterMock.requestWalletsTokens(Set.of(wallet))).thenReturn(CompletableFuture.supplyAsync(() -> loadedData));

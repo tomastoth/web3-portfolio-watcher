@@ -37,8 +37,10 @@ public class PriceToken extends BaseEntity implements Serializable {
   @JoinColumn(name = "token_id")
   private Token token;
   @NotNull
-  @Column(name = "price", nullable = false)
+  @Column(name = "price", nullable = false, precision = 19, scale = 2)
   private BigDecimal priceUsd;
+  @NotNull
+  @Column(name = "price_eth", nullable = false, precision = 19, scale = 10)
   private BigDecimal priceEth;
 
   @Override
