@@ -10,9 +10,27 @@
 
 package xyz.kryom.wallets_backend;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import xyz.kryom.crypto_common.Blockchain;
+import xyz.kryom.crypto_common.BlockchainType;
+import xyz.kryom.crypto_common.price.PriceProvider;
 import xyz.kryom.wallets_backend.data_fetching.WalletInfoFetcher;
+import xyz.kryom.wallets_backend.mapper.WalletMapper;
+import xyz.kryom.wallets_backend.model.PriceToken;
+import xyz.kryom.wallets_backend.model.Token;
+import xyz.kryom.wallets_backend.model.Wallet;
+import xyz.kryom.wallets_backend.model.WalletToken;
+import xyz.kryom.wallets_backend.service.AppService;
+import xyz.kryom.wallets_backend.web.dto.WalletDto;
+import xyz.kryom.wallets_backend.web.dto.WalletTokenDto;
 
 /**
  * @author Tomas Toth
@@ -20,12 +38,77 @@ import xyz.kryom.wallets_backend.data_fetching.WalletInfoFetcher;
 @Component
 public class Runner implements CommandLineRunner {
   private final WalletInfoFetcher walletInfoFetcher;
+  private final AppService appService;
 
-  public Runner(WalletInfoFetcher walletInfoFetcher) {
+  private final PriceProvider priceProvider;
+  private final WalletMapper walletMapper;
+
+  public Runner(
+      WalletInfoFetcher walletInfoFetcher, AppService appService,
+      PriceProvider priceProvider, WalletMapper walletMapper) {
     this.walletInfoFetcher = walletInfoFetcher;
+    this.appService = appService;
+    this.priceProvider = priceProvider;
+    this.walletMapper = walletMapper;
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
+    fetchTokenUpdatesForAllWallets();
   }
+
+  private void fetchTokenUpdatesForAllWallets() {
+    List<Wallet> wallets = appService.findAllWallets();
+    List<WalletDto> walletDtos = walletMapper.toDtos(wallets);
+    Map<Token, PriceToken> currentPriceTokens = new HashMap<>();
+    Map<WalletDto, Collection<WalletTokenDto>> walletUpdate =
+        walletInfoFetcher.fetchWalletTokens(walletDtos);
+    walletUpdate.forEach((walletDto, walletTokens) -> saveTokensForSingleWallet(
+        currentPriceTokens,
+        walletDto,
+        walletTokens));
+  }
+
+  private void saveTokensForSingleWallet(
+      Map<Token, PriceToken> currentPriceTokens,
+      WalletDto walletDto,
+      Collection<WalletTokenDto> walletTokens) {
+    Blockchain blockchainEnum = Blockchain.ETHEREUM;
+    Wallet wallet = appService.fetchOrCreateWallet(walletDto);
+    Optional<xyz.kryom.wallets_backend.model.Blockchain> blockchainOpt =
+        appService.findBlockchainByName(Blockchain.ETHEREUM.name());
+    xyz.kryom.wallets_backend.model.Blockchain blockchain = appService.fetchOrCreateBlockchain(blockchainEnum,
+        blockchainOpt);
+    for (WalletTokenDto walletTokenDto : walletTokens) {
+      WalletToken walletToken = new WalletToken();
+      Token token = appService.fetchOrCreateToken(blockchainEnum, walletTokenDto, blockchain);
+      PriceToken priceToken;
+      BigDecimal ethPrice = priceProvider.getPriceBySymbol("ETH");
+      if (currentPriceTokens.containsKey(token)) {
+        priceToken = currentPriceTokens.get(token);
+      } else {
+        priceToken = createNewPriceToken(walletTokenDto, token, ethPrice);
+        currentPriceTokens.put(token, priceToken);
+      }
+      walletToken.setWallet(wallet);
+      walletToken.setPriceToken(priceToken);
+      walletToken.setAmount(walletTokenDto.tokenAmount());
+      walletToken.setWallet(wallet);
+      appService.saveWalletToken(walletToken);
+    }
+    appService.saveWallet(wallet);
+  }
+
+  private PriceToken createNewPriceToken(WalletTokenDto walletTokenDto, Token token, BigDecimal ethPrice) {
+    PriceToken priceToken;
+    priceToken = new PriceToken();
+    priceToken.setPriceUsd(walletTokenDto.tokenPriceUsd());
+    priceToken.setToken(token);
+    BigDecimal priceInEth = walletTokenDto.tokenPriceUsd().divide(ethPrice, MathContext.DECIMAL128);
+    priceToken.setPriceEth(priceInEth);
+    appService.savePriceToken(priceToken);
+    return priceToken;
+  }
+
+
 }
